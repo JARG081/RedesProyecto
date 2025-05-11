@@ -2,8 +2,6 @@ from flask import Flask, request, render_template, jsonify
 from datetime import datetime
 import json
 import os
-
-
 app = Flask(__name__)
 
 # Ruta del archivo con nombres
@@ -16,7 +14,7 @@ estado_por_codigo = {}
 log = []
 
 # Estado de autorización por UID
-autorizado_por_codigo = {}
+autorizaciones_por_codigo = {}
 
 # Cargar nombres desde tarjetas.json
 try:
@@ -33,6 +31,9 @@ def obtener_log():
 def index():
     return render_template('index.html', log=log, autorizado_por_codigo=autorizado_por_codigo)
 
+# Diccionario que guarda si una tarjeta está autorizada
+autorizado_por_codigo = {}
+
 @app.route('/registro', methods=['POST'])
 def recibir_datos():
     data = request.get_json()
@@ -41,31 +42,42 @@ def recibir_datos():
 
     codigo = data['uid']
     hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    # Alternar ingreso/salida
-    ultimo_estado = estado_por_codigo.get(codigo, 'SALIDA')
-    nuevo_estado = 'INGRESO' if ultimo_estado == 'SALIDA' else 'SALIDA'
-    estado_por_codigo[codigo] = nuevo_estado
-
-    # Obtener nombre desde el diccionario
+    autorizado = autorizado_por_codigo.get(codigo, False)
     nombre = nombres_por_codigo.get(codigo, 'Desconocido')
+    ultimo_estado = estado_por_codigo.get(codigo)
 
-    # Verificar si la tarjeta está autorizada
-    if autorizado_por_codigo.get(codigo, False):
-        resultado = 'APROBADO'
+    # Lógica para determinar la solicitud
+    if autorizado:
+        if ultimo_estado is None or ultimo_estado == 'SALIDA':
+            nueva_solicitud = 'INGRESO'
+            resultado = 'APROBADO'
+        elif ultimo_estado == 'INGRESO':
+            nueva_solicitud = 'SALIDA'
+            resultado = 'APROBADO'
     else:
+        # Usuario NO autorizado: la solicitud debe ser la opuesta al último estado
+        if ultimo_estado == 'INGRESO':
+            nueva_solicitud = 'SALIDA'
+        elif ultimo_estado == 'SALIDA':
+            nueva_solicitud = 'INGRESO'
+        else:
+            nueva_solicitud = 'INGRESO'  # Caso inicial
         resultado = 'DENEGADO'
 
-    # Registrar evento
+    # Actualizar estado solo si fue APROBADO
+    if resultado == 'APROBADO':
+        estado_por_codigo[codigo] = nueva_solicitud
+
+    # Registrar el evento
     log.append({
         'codigo': codigo,
         'nombre': nombre,
         'hora': hora,
-        'estatus': nuevo_estado,
+        'estatus': nueva_solicitud,
         'resultado': resultado
     })
 
-    return f"UID {codigo} registrado con estatus {nuevo_estado}"
+    return f"UID {codigo} registrado con resultado {resultado}"
 
 @app.route('/autorizaciones', methods=['GET', 'POST'])
 def autorizaciones():
