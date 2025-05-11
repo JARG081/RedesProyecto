@@ -71,6 +71,19 @@ tr:hover {
     background-color: #d6e4f5;
 }
 
+button {
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
 .mensaje {
     text-align: center;
     margin-top: 20px;
@@ -86,7 +99,4 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-.uppercase {
-    text-transform: uppercase;
 }

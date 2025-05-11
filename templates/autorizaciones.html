@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Autorizaciones</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Autorizaciones</h1>
+        <nav>
+            <a href="/">Inicio</a>
+            <a href="/autorizaciones">Autorizaciones</a>
+        </nav>
+    </header>
+
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Código Tarjeta (UID)</th>
+                    <th>Autorizar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for codigo, nombre in nombres_por_codigo.items() %}
+                <tr>
+                    <td>{{ nombre }}</td>
+                    <td>{{ codigo }}</td>
+                    <td>
+                        <form method="POST" action="/autorizaciones">
+                            <input type="hidden" name="uid" value="{{ codigo }}">
+                            <button type="submit" name="autorizado" value="true" {% if autorizado_por_codigo[codigo] %}disabled{% endif %}>Autorizar</button>
+                            <button type="submit" name="autorizado" value="false" {% if not autorizado_por_codigo[codigo] %}disabled{% endif %}>Denegar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
