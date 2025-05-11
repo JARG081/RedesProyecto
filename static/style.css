@@ -1,0 +1,89 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #2973b9;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+nav {
+    margin-top: 10px;
+}
+
+nav a {
+    color: #cfe2ff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+main {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #f8f9fa;
+}
+
+th, td {
+    border: 1px solid #d1dbe8;
+    padding: 10px;
+    text-align: center;
+    font-size: 15px;
+}
+
+th {
+    background-color: #2973b9;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #edf2f7;
+}
+
+tr:hover {
+    background-color: #d6e4f5;
+}
+
+.mensaje {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #2973b9;
+}
+
+a {
+    color: #2973b9;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,41 @@
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Registro de Ingresos y Salidas</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <meta http-equiv="refresh" content="10">
+    </head>
+    <body>
+        <header>
+            <h1>Registro de Ingresos y Salidas</h1>
+            <nav>
+                <a href="/">Inicio</a>
+                <a href="/autorizaciones">Autorizaciones</a>
+            </nav>
+        </header>
+
+        <main>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Código Tarjeta (UID)</th>
+                        <th>Hora Registrada</th>
+                        <th>Estatus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registro in log %}
+                    <tr>
+                        <td>{{ registro.nombre }}</td>
+                        <td>{{ registro.codigo }}</td>
+                        <td>{{ registro.hora }}</td>
+                        <td>{{ registro.estatus }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </body>
+    </html>
