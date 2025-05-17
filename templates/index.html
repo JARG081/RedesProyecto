@@ -15,24 +15,30 @@
     </header>
 
     <main>
-        <table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Código Tarjeta (UID)</th>
-            <th>Hora Registrada</th>
-            <th>Solicitud</th>
-            <th>Resultado</th> <!-- NUEVA COLUMNA -->
-        </tr>
-    </thead>
-    <tbody id="tabla-registro">
-        <!-- JS insertará aquí -->
-    </tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Código Tarjeta (UID)</th>
+                <th>Hora Registrada</th>
+                <th>Solicitud</th>
+                <th>Resultado</th> <!-- NUEVA COLUMNA -->
+            </tr>
+        </thead>
+        <tbody id="tabla-registro">
+            <!-- JS insertará aquí -->
+        </tbody>
+    </table>
 
     </main>
     <script>
     async function actualizarTabla() {
+
+    function notificationSound() {
+        var audio = new Audio("access_notification.mp3");
+        audio.play();
+    }
+
         try {
             const response = await fetch('/api/log');
             const registros = await response.json();
@@ -51,6 +57,10 @@
                     </tr>
                 `;
                 tbody.innerHTML += fila;
+               
+                if (registro.resultado) {
+                    notificationSound();
+                }
             });
         } catch (error) {
             console.error("Error al actualizar la tabla:", error);
