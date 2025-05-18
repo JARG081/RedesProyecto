@@ -12,8 +12,8 @@ MFRC522DriverPinSimple ss_pin(15);
 MFRC522DriverSPI driver{ss_pin}; // Create SPI driver
 MFRC522 mfrc522{driver};         // Create MFRC522 instance
 
-const char* ssid = "MANUEL_2.4"; // Nombre del wifi al que se conectaran
-const char* password = "Cien6796920"; // Clave del wifi al que se conectaran
+const char* ssid = "Galaxy A53 5GB1BC"; // Nombre del wifi al que se conectaran
+const char* password = "aaaa3333"; // Clave del wifi al que se conectaran
 
 #define LECTOR_ID "NombreSalaID" //Pueden crear varios RFID de ser necesario
 /* Seccion de asignacion*/
@@ -58,7 +58,7 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     WiFiClient client;
     HTTPClient http;
-    http.begin(client, "http://192.168.1.47:5000/registro"); //Aqui debe ir la direccion maquina que hostea el backend
+    http.begin(client, "http://192.168.113.57:5000/registro"); //Aqui debe ir la direccion maquina que hostea el backend
                       // Si estan en la misma red, la local (IPv4)
 
     http.addHeader("Content-Type", "application/json");

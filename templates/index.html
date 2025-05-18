@@ -16,49 +16,80 @@
 
     <main>
         <table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Código Tarjeta (UID)</th>
-            <th>Hora Registrada</th>
-            <th>Solicitud</th>
-            <th>Resultado</th> <!-- NUEVA COLUMNA -->
-        </tr>
-    </thead>
-    <tbody id="tabla-registro">
-        <!-- JS insertará aquí -->
-    </tbody>
-</table>
+            <thead>
+                <tr>
+                    <th>N°</th> <!-- NUEVA COLUMNA -->
+                    <th>Nombre</th>
+                    <th>Código Tarjeta (UID)</th>
+                    <th>Hora Registrada</th>
+                    <th>Solicitud</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
 
+            <tbody id="tabla-registro">
+                <!-- JS insertará aquí -->
+            </tbody>
+        </table>
     </main>
+    
+    <audio id="sonido-aprobado" src="/static/acepta.mp3"></audio>
+    <audio id="sonido-denegado" src="/static/deniega.mp3"></audio>
+
     <script>
-    async function actualizarTabla() {
-        try {
-            const response = await fetch('/api/log');
-            const registros = await response.json();
+                let ultimoContador = 0;
 
-            const tbody = document.querySelector("#tabla-registro");
-            tbody.innerHTML = '';
+                async function actualizarTabla() {
+                    try {
+                        const response = await fetch('/api/log');
+                        const registros = await response.json();
 
-            registros.forEach(registro => {
-                const fila = `
-                    <tr>
-                        <td>${registro.nombre}</td>
-                        <td class="uppercase">${registro.codigo}</td>
-                        <td>${registro.hora}</td>
-                        <td>${registro.estatus}</td>
-                        <td>${registro.resultado || ''}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += fila;
-            });
-        } catch (error) {
-            console.error("Error al actualizar la tabla:", error);
-        }
-    }
-    actualizarTabla();
-    setInterval(actualizarTabla, 500);
-</script>
+                        const tbody = document.querySelector("#tabla-registro");
+                        const sonidoAprobado = document.getElementById("sonido-aprobado");
+                        const sonidoDenegado = document.getElementById("sonido-denegado");
 
+                            tbody.innerHTML = '';
+
+                            registros.slice().reverse().forEach((registro, i) => {
+                                const fila = `
+                                    <tr>
+                                        <td>${registros.length - i}</td>
+                                        <td>${registro.nombre}</td>
+                                        <td class="uppercase">${registro.codigo}</td>
+                                        <td>${registro.hora}</td>
+                                        <td>${registro.estatus}</td>
+                                        <td>${registro.resultado || ''}</td>
+                                    </tr>
+                                `;
+                                tbody.innerHTML += fila;
+                            });
+
+
+                        if (registros.length > ultimoContador) {
+                            const nuevoUltimo = registros[registros.length - 1];
+
+                            if (ultimoContador !== 0) { // Evita sonido en carga inicial
+                                if (nuevoUltimo.resultado === 'APROBADO') {
+                                    sonidoAprobado.play();
+                                } else if (nuevoUltimo.resultado === 'DENEGADO') {
+                                    sonidoDenegado.play();
+                                }
+                            }
+
+                            ultimoContador = registros.length;
+                        }
+
+                    } catch (error) {
+                        console.error("Error al actualizar la tabla:", error);
+                    }
+                }
+
+                actualizarTabla().then(() => {
+                    ultimoContador = 0; // No reproducir sonido en la primera carga
+                });
+
+                setInterval(actualizarTabla, 500);
+
+    </script>
 </body>
 </html>
